@@ -7,12 +7,11 @@ export default function StudentTable({ students, isLoading, onSuccess }) {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const handleUpdate = (id) => {
         const student = students.find((student) => student.id === id);
-        console.log(student);
         setSelectedStudent(student);
         setIsFormOpen(true);
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id, user_id) => {
         const confirmed = confirm("Anda yakin ingin menghapus data ini?")
         try {
             const response = await fetch(`/api/students`, {
@@ -20,7 +19,7 @@ export default function StudentTable({ students, isLoading, onSuccess }) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id })
+                body: JSON.stringify({ id, user_id })
             });
 
             const data = await response.json();
@@ -90,7 +89,7 @@ export default function StudentTable({ students, isLoading, onSuccess }) {
                                         <button className="bg-yellow-300 hover:bg-yellow-400 text-gray-800 font-bold py-2 px-4 rounded-md" onClick={() => handleUpdate(student.id)}>
                                             Edit
                                         </button>
-                                        <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md" onClick={() => handleDelete(student.id)}>
+                                        <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md" onClick={() => handleDelete(student.id, student.user_id)}>
                                             Hapus
                                         </button>
                                     </div>

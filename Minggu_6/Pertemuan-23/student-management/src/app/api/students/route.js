@@ -99,10 +99,11 @@ export async function PUT(request) {
 
 
 export async function DELETE(request) {
-    const { id } = await request.json();
+    const { id, user_id } = await request.json();
 
     try {
         const result = await db.execute("DELETE FROM students WHERE id = ?", [id]);
+        const resultUser = await db.execute("DELETE FROM users WHERE id = ?", [user_id]);
         return NextResponse.json({
             success: true,
             message: "Student deleted successfully"

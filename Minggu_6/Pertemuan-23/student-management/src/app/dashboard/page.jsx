@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 import StudentTable from "../../components/student-table";
 import Pagination from "../../components/pagination";
 import StudentForm from "../../components/student-form";
+import { useCurrentUser } from "@/context/current-user/client";
+import { logout } from "@/app/dashboard/action";
 
 export default function Dashboard() {
+    const currentUser = useCurrentUser();
     const [students, setStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -21,6 +24,10 @@ export default function Dashboard() {
 
     const handleAddSuccess = () => {
         fetchStudents(1)
+    }
+
+    const handleLogout = async () => {
+        await logout();
     }
 
     const fetchStudents = async (page = 1) => {
@@ -46,15 +53,25 @@ export default function Dashboard() {
         }
     }
 
-
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-black">List Mahasiswa</h1>
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2" onClick={() => setIsFormOpen(true)}>
-                        Tambah Mahasiswa
-                    </button>
+                    <div className="flex gap-4">
+                        <button
+                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center gap-2"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+                        <button
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
+                            onClick={() => setIsFormOpen(true)}
+                        >
+                            Tambah Mahasiswa
+                        </button>
+                    </div>
                 </div>
 
                 <StudentTable students={students} isLoading={isLoading} onSuccess={handleAddSuccess} />
@@ -70,7 +87,6 @@ export default function Dashboard() {
                 onSuccess={handleAddSuccess}
                 mode="add"
             />
-
         </div>
     )
 }
